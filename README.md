@@ -42,9 +42,14 @@ C · malformed              reward 0.0000   refused: no `omegas` list
 
 B writes a correct-sounding Sturm-Liouville derivation and returns the textbook
 quarter-wave formula, which is wrong on an exponential profile — its first
-eigenvalue is 1.95 against the true 3.48. **A judge reading the prose would score
-it well.** (That last sentence is an argument, not a measurement: the judge
-comparison is specified and not yet run, and `docs/ANTIHACK.md` flags it.)
+eigenvalue is 1.95 against the true 3.48.
+
+**We predicted an LLM judge would be fooled by this class of answer. We ran it,
+and it was not** — see [`experiments/judge_vs_physics/RESULTS.md`](experiments/judge_vs_physics/RESULTS.md).
+The judge caught 12 of 12 scripted fabrications and said why. What survives the
+result is narrower and still true: a physics verifier costs nothing per
+evaluation, is deterministic, is specific about *which* invariant failed, and
+carries a formal guarantee rather than an opinion.
 
 ```bash
 python examples/demo_refinement.py

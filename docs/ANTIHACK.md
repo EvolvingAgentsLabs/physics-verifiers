@@ -56,6 +56,14 @@ not a uniform pass, not a uniform zero.
 Sturm-Liouville derivation and returns the wrong formula scores **0.0000 with 44%
 error**, its first eigenvalue 1.95 against the true 3.48.
 
+> **Measured, and against our prediction:** an LLM judge shown this class of
+> answer was **not** fooled — 0 of 12 scripted fabrications got past it, and it
+> named the defect each time
+> ([`experiments/judge_vs_physics/RESULTS.md`](../experiments/judge_vs_physics/RESULTS.md)).
+> The case for a physics verifier here is cost, determinism, specificity and a
+> formal guarantee — not that judges are easy to fool. On the blatant attacks
+> tested, they are not.
+
 **Level 3 adds a second gate.** Half the reward is naming the injected defect,
 and the injected cause must be the **unique argmax** over keyword hits — a text
 reciting all four causes earns nothing
@@ -171,7 +179,12 @@ Stated because a list of defences with no gaps in it is not credible:
 - **Statistical luck.** A fabricated answer can land inside the |z| gate by
   chance; the spread and autocorrelation checks make it unlikely, not impossible.
   The rate is not measured here.
-- **A judge comparison at scale.** `experiments/judge_vs_physics/` is specified
-  in the spec and not yet run. Until it is, "an LLM judge would score B well" is
-  an argument from the prose, not a measurement — and it is flagged as such
-  everywhere it appears.
+- **A judge at any subtlety beyond the blatant.** `experiments/judge_vs_physics/`
+  ran at N=12 and the judge caught every scripted fabrication. Those attacks are
+  the easy case and they are ours — the payloads each family was built to kill.
+  Whether a judge sees a plausible scheme with a factor of two, or a correct
+  scheme with the wrong boundary condition — the kind this repository has caught
+  in its **own reference solutions** four times — is untested.
+- **An attacker that will actually attack.** 12 of 12 model-attacker replies
+  solved the problem instead of cheating, under increasingly explicit
+  instructions not to. A defence cannot be tested by an adversary that declines.
