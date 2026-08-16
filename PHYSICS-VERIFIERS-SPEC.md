@@ -267,3 +267,43 @@ los rangos que §3 manda muestrear. Un umbral absoluto es un umbral sobre `α` y
 repo perdió una solución correcta por ese factor de dos — error relativo
 exactamente 1.0 — porque el prompt no lo decía. **Todo prompt que use esta verdad
 escribe la SDE y la normalización completas.**
+
+**A.4 — Do not close a training loop; use traces and frontier models.**
+A review raised this and it is adopted as a scope decision. Running PPO/GRPO
+would spend the 30 days on CUDA and hyperparameters and would prove the wrong
+thing: the product is the referee, not the player. What a buyer needs to see is
+that the reward is **dense, discriminating and actionable**, which is testable in
+inference for the price of a few API calls. `examples/demo_refinement.py` does
+it — best-of-N selection and verdict-fed-back refinement, measured at
+0.0000 → 0.0019 → 0.8812.
+
+**A.5 — Tolerances are set from a measured instrument floor, not chosen.**
+Also raised by review, and by then already the practice. Every family has at
+least one number that was wrong before it was measured: MMS level 1 asked 1e-8
+where a correct second-order solve gives 3.5e-5; the conservation energy
+estimator read 1.5e-2 drift on an **exact** solution until the Dirichlet node was
+included, and 6.5e-5 after; convergence level 4 measured its own roundoff floor
+and scored a perfect solver at 0.48; the stochastic correlation-time estimator
+carries a 10-26% bias on exact data. Each is recorded where the constant lives.
+
+**A.6 — `params` is the leak nobody would notice.**
+The review asked whether an agent could read the answer from the manifest or the
+parameters before executing. `TaskInstance` is what an adapter serialises, so
+`params` is public — and nothing in it looks like an answer, which is exactly why
+it needs a check rather than a convention.
+`tests/test_no_truth_travels.py` recomputes each task's truth independently and
+asserts it appears in no prompt and no `params`, across all five families at
+once, so a sixth inherits it.
+
+**A.7 — The sandbox is not a security boundary, and says so.**
+Review suggested Docker/gVisor/WASM for v2. Agreed and deferred; what is not
+deferred is the honesty. `core/sandbox.py` states that a determined escape from
+in-process Python is possible and that the real boundary is a container — which
+the hub runtimes already provide. A "sandboxed" claim a reviewer breaks in five
+minutes costs more credibility than the feature buys.
+
+**A.8 — A schema error must be actionable, or the RL signal goes sparse.**
+Adopted. Every refusal returns `breakdown.reason` and, where relevant,
+`schema_error: True`, and the refinement demo feeds exactly that text back. The
+reward rose because the breakdown said something a model could act on; a verifier
+that only ever answered "wrong" could not drive the loop.

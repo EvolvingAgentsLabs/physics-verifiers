@@ -10,28 +10,56 @@ known sampling error — not an LLM judge and not a hackable test suite.
 
 Apache 2.0 · [spec](PHYSICS-VERIFIERS-SPEC.md) · [interface notes](docs/INTERFACE-NOTES.md)
 
-## Status — 2026-08-16
+## Status
 
-Day 1 of 30. What exists is real; what does not is listed.
+All five families run. `python examples/run_local_eval.py --all` over the bundled
+references: **17 tasks, mean reward 0.9383, none refused at the gate.** 135 tests.
 
-| | state |
-|---|---|
-| Step 0 — read the installed `verifiers` | **done**, and it found a live API split |
-| `core/contracts.py` | done |
-| `core/truth/` — uniform, exponential, OU/Lyapunov | done, two routes each, 9 checks |
-| Families 1–5 | not started |
-| Adapters | not started |
-| `judge_vs_physics` experiment | not started |
+| family | what the verifier is | levels |
+|---|---|---|
+| `eigenmodes` | closed forms, and roots of a transcendental equation | 1–4 |
+| `conservation` | energy, reversibility, the PDE residual, the initial data | 1–4 |
+| `convergence` | the observed order of convergence | 1–4 |
+| `stochastic` | estimators against their own sampling distribution | 1–4 |
+| `mms` | a manufactured solution — a **generator**, not a list | 1–4 |
 
-## The step-0 finding, because it changes what to build
+Not yet built: `experiments/judge_vs_physics/`, and the adapter for the
+unreleased `verifiers.v1`.
 
-`pip install verifiers` gives **0.1.5**, whose API is `Environment` / `Rubric` /
-`SingleTurnEnv`. The repository's *own* environments are written against
-`verifiers.v1` — `Task`, `Runtime`, `@reward`, `run_uv_script` — which **no
-released version contains**. Two live APIs, one installable.
+## See it in one command
 
-So `core/` imports neither, and there will be two adapters. Details, with both
-contracts quoted from source, in [`docs/INTERFACE-NOTES.md`](docs/INTERFACE-NOTES.md).
+```bash
+python examples/demo_antihack.py
+```
+
+Three agents, one generated task:
+
+```
+A · honest solver          reward 0.9977   error 2.3e-09
+B · fluent and wrong       reward 0.0000   error 4.4e-01
+C · malformed              reward 0.0000   refused: no `omegas` list
+```
+
+B writes a correct-sounding Sturm-Liouville derivation and returns the textbook
+quarter-wave formula, which is wrong on an exponential profile — its first
+eigenvalue is 1.95 against the true 3.48. **A judge reading the prose would score
+it well.** (That last sentence is an argument, not a measurement: the judge
+comparison is specified and not yet run, and `docs/ANTIHACK.md` flags it.)
+
+```bash
+python examples/demo_refinement.py
+```
+
+The reward as a signal rather than a grade: best-of-N selection, then the verdict
+fed back. Measured: 0.0000 → 0.0019 → 0.8812.
+
+## Why it cannot be talked into
+
+The one-page answer to a sceptical research engineer is
+[`docs/ANTIHACK.md`](docs/ANTIHACK.md), where every claim is a named test —
+including the four cheats each leg of the conservation trio kills, and the
+fabricated stochastic answer that scores `z = 0.00` on the variance and dies on
+inter-replicate spread.
 
 ## Prior art, already measured
 
