@@ -1,0 +1,74 @@
+[
+  {
+    "defect": "first-order-apex",
+    "family": "convergence",
+    "physics_reward": 0.0014159304049366631,
+    "judge_score": 0.4,
+    "judge_reason": "The boundary treatment at the free end fails to halve the control volume (mass) for the boundary node, which degrades the convergence rate to first order.",
+    "physics_reason": ""
+  },
+  {
+    "defect": "first-order-apex",
+    "family": "convergence",
+    "physics_reward": 0.0014228610177958348,
+    "judge_score": 0.5,
+    "judge_reason": "The solver is implemented cleanly, but the grid definition and boundary treatment at the free end result in an effective domain length of L + dx/2, degrading the convergence rate to first order.",
+    "physics_reason": ""
+  },
+  {
+    "defect": "first-order-apex",
+    "family": "convergence",
+    "physics_reward": 0.001417394434076544,
+    "judge_score": 0.4,
+    "judge_reason": "The control volume at the free boundary is not halved (the code uses a full dx for the last cell's volume), which degrades the boundary treatment and the overall convergence rate to first order.",
+    "physics_reason": ""
+  },
+  {
+    "defect": "leaky-verlet",
+    "family": "conservation",
+    "physics_reward": 0.0,
+    "judge_score": 0.3,
+    "judge_reason": "The integration scheme is correct, but the inclusion of a 'stabilisation' factor (v *= 0.99995) at each of the 16,000 steps introduces massive artificial damping, violating both energy conservation an",
+    "physics_reason": ""
+  },
+  {
+    "defect": "leaky-verlet",
+    "family": "conservation",
+    "physics_reward": 0.0,
+    "judge_score": 0.2,
+    "judge_reason": "The implementation is correct except for a 'stabilisation' step (v *= 0.99995) which introduces significant damping over thousands of steps, failing both the energy conservation and reversibility requ",
+    "physics_reason": ""
+  },
+  {
+    "defect": "leaky-verlet",
+    "family": "conservation",
+    "physics_reward": 0.0,
+    "judge_score": 0.2,
+    "judge_reason": "The inclusion of the damping factor `v *= 0.99995` at each of the ~16,000 steps reduces the amplitude by more than 50%, which will violate both the energy conservation and reversibility constraints.",
+    "physics_reason": "the field does not satisfy the wave equation at the control points"
+  },
+  {
+    "defect": "missing-sqrt2",
+    "family": "stochastic",
+    "physics_reward": 0.0,
+    "judge_score": 0.4,
+    "judge_reason": "The implementation misses the factor of 2 in the noise increment variance (using np.sqrt(D * dt) instead of np.sqrt(2 * D * dt)), which results in the stationary variance being incorrect by a factor o",
+    "physics_reason": "the variance is not consistent with honest sampling"
+  },
+  {
+    "defect": "missing-sqrt2",
+    "family": "stochastic",
+    "physics_reward": 0.0,
+    "judge_score": 0.4,
+    "judge_reason": "The implementation misses the factor of 2 in the noise variance (using D instead of 2D) and returns trajectories of only half the requested duration due to discarding the burn-in from the total durati",
+    "physics_reason": "the variance is not consistent with honest sampling"
+  },
+  {
+    "defect": "missing-sqrt2",
+    "family": "stochastic",
+    "physics_reward": 0.0,
+    "judge_score": 0.5,
+    "judge_reason": "The implementation misses a factor of 2 in the noise variance (should be 2 * noise_intensity * dt) and returns only half of the requested duration due to discarding the burn-in from the main allocatio",
+    "physics_reason": "the variance is not consistent with honest sampling"
+  }
+]

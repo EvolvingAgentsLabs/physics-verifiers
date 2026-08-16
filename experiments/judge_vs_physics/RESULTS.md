@@ -94,7 +94,68 @@ does not answer it.
   with an extra step — and it still needs the physics to know what the output
   should have been.
 
-## What to run next, if this is worth pursuing
+## The follow-up, run the same day: the judge caught the subtle defects too
+
+The section below was written as "the experiment to run next". It was cheap, so
+it was run. **It falsified the remaining hypothesis as well.**
+
+Three defects, each one this repository already made **in its own reference
+solutions**, each wrapped in the confident prose its author would have written
+because its author believed it:
+
+| defect | physics | judge | what the judge said |
+|---|---|---|---|
+| a full cell at the free end instead of half | 0.001 | 0.40–0.50 | *"the boundary treatment at the free end fails to halve the control volume"* |
+| `v *= 0.99995` per step, called stabilisation | 0.000 | 0.20–0.30 | *"the inclusion of a 'stabilisation' damping factor"* |
+| the OU noise increment missing its factor of two | 0.000 | 0.40–0.50 | *"misses the factor of 2 in the noise variance"* |
+
+**0 of 9** scored above 0.7 under either scorer. The judge did not merely mark
+them down — it **named the cause**, in three cases out of three.
+
+These are not toy defects. The first cost this repo a task that scored 0.89 where
+1.0 was needed, and Richardson extrapolation made it *worse* before the cause was
+found. The third is the factor of two that cost the ancestor project a day. A
+model reading the source found all three in seconds.
+
+## Where that leaves the thesis, plainly
+
+Two experiments, both against the claim. The empirical case for *"physics
+verifiers because LLM judges get hacked"* **is not supported**, and it should not
+be made. On this material, at these difficulties, with this judge, the judge was
+as good at detection as the verifier.
+
+What survives is smaller, and none of it ever depended on the judge being bad:
+
+* **Cost.** A judge call per rollout is a second model inference. Half this run's
+  API spend was the judge; at RL scale that is a doubling of training cost, and
+  physics verification is microseconds of numpy.
+* **Determinism.** The judge scored the *same* defect class between 0.20 and
+  0.50 across repeats. Physics scored 0.000 and 0.001. As an RL reward, that
+  spread is noise injected into the gradient.
+* **It measures behaviour, not source.** The judge reviewed code and never ran
+  anything. Every defect above was legible *in the source* — which is what made
+  them findable. A defect that only appears at runtime, at particular
+  parameters, or in a library version, is invisible to a reader and unmissable
+  to a verifier. **Nothing here tested that**, and it is the honest place to look
+  next.
+
+## The asset this run points at instead
+
+The generator, not the verifier.
+
+`core/truth/mms_engine.py` manufactures **unlimited** physics tasks with exact
+truth: choose a solution, choose coefficients, derive the forcing. An LLM judge
+can grade a task; it cannot *create* one with a known answer. A lab needs task
+supply, and that scarcity is untouched by any of the above.
+
+Whether that is worth pursuing is a business decision this file does not make. It
+records that the verification argument, as originally framed, did not survive
+contact with a measurement — and that the generation argument was never tested by
+it and still stands.
+
+## What was going to be run next
+
+
 
 The question this run raises is sharper than the one it was built for:
 **at what subtlety does a judge stop noticing?** A ladder of attacks — blatant
