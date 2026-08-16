@@ -121,14 +121,23 @@ def test_the_manufactured_solution_never_leaves_the_verifier():
     fam = MMS()
     for level in LEVELS:
         task = fam.generate(level, np.random.default_rng(level))
-        blob = repr(task.params) + task.prompt
-        assert "u_expr" not in blob and "sin(" not in task.params.get("code", "").split("def F")[0]
-        # The code block defines mu, K and F -- and nothing else.
-        assert sorted(
+        assert "u_expr" not in repr(task.params) + task.prompt
+
+        # The code block defines the coefficients and the forcing, and nothing
+        # else. That is the real check.
+        #
+        # The first version also asserted no `sin(` appeared before `def F`, on
+        # the theory that a sine there could only come from the solution. It went
+        # red the day the coefficient library grew a `1 + a sin^2(pi x / 2L)`
+        # family — a coefficient, not a leak. A heuristic that fires on the
+        # library growing is a heuristic, not a check.
+        defined = sorted(
             line.split("(")[0].removeprefix("def ").strip()
             for line in task.params["code"].splitlines()
             if line.startswith("def ")
-        ) == ["F", "K", "mu"]
+        )
+        assert defined in (["F", "K", "mu"], ["F", "K", "b", "mu"]), defined
+        assert "u" not in defined
 
 
 def test_the_inverse_problem_states_its_targets_and_hides_its_profile():

@@ -307,3 +307,27 @@ Adopted. Every refusal returns `breakdown.reason` and, where relevant,
 `schema_error: True`, and the refinement demo feeds exactly that text back. The
 reward rose because the breakdown said something a model could act on; a verifier
 that only ever answered "wrong" could not drive the loop.
+
+**A.9 — The thesis of §0 did not survive measurement. The product moved.**
+§0 argued for "entornos donde el verificador es un teorema" against LLM judges
+that get hacked. `experiments/judge_vs_physics/` tested that twice — blatant
+fabrications and subtle numerical defects — and the judge detected **as well as
+the verifier did**, naming the causes. Both pre-registrations said what to do
+with that result and it was done: the claim was withdrawn from the README and
+from `docs/ANTIHACK.md` rather than footnoted.
+
+What the same work leaves standing is **task supply**, not verification. A model
+can grade a task and solve one; it cannot create one with a known answer.
+`core/truth/mms_engine.py` manufactures unlimited tasks with exact truth across
+three operators, two coefficient families and three measured difficulty levels,
+at 24 tasks per second with zero collisions.
+
+Consequences for the rest of this document: §0's pitch is superseded, §4's post
+should not be written as planned because the figure that justified it does not
+exist, and §3's five families are re-framed — they remain the scoring layer and
+the regression suite, and they stop being the argument.
+
+The 90-day cut criterion in §6 is unchanged and its zero-waste clause now does
+more work: the families are exactly the regression suite COCLEA-SR and the
+medical projects need, and the generator is a data asset independent of whether
+anybody buys a verifier.
