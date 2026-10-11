@@ -1,5 +1,7 @@
 # physics-verifiers
 
+> **Paused** since 2026-08-16 — kept readable, not developed. The lab's active projects are lora-kernel, agentvcs and gene-evidence: [evolvingagentslabs.github.io](https://evolvingagentslabs.github.io).
+
 **A generator of physics tasks with exact truth.** Choose a solution, choose
 coefficients, derive the forcing that makes them consistent — and you have a
 problem nobody has seen whose answer you know to machine precision. Verification
